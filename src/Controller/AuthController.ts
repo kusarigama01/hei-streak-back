@@ -1,6 +1,6 @@
 import type { NextFunction, Request, Response } from "express";
-import { login } from "../Service/AuthService";
-import { ApiError } from "../Service/ApiError";
+import { login } from "../Service/AuthService.js";
+import { ApiError } from "../Service/ApiError.js";
 
 export const postLogin = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {

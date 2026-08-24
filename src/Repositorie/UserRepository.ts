@@ -1,5 +1,5 @@
-import { pool } from "../config/db";
-import type { User } from "../Model/User";
+import { pool } from "../config/db.js";
+import type { User } from "../Model/User.js";
 
 export const findUserByEmail = async (email: string): Promise<User | null> => {
   const result = await pool.query(

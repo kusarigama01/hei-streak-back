@@ -1,8 +1,8 @@
-import { findUserByEmail } from "../Repositorie/UserRepository";
-import { comparePassword } from "../Security/password";
-import { generateToken } from "../Security/jwt";
-import { ApiError } from "./ApiError";
-import type { User } from "../Model/User";
+import { findUserByEmail } from "../Repositorie/UserRepository.js";
+import { comparePassword } from "../Security/password.js";
+import { generateToken } from "../Security/jwt.js";
+import { ApiError } from "./ApiError.js";
+import type { User } from "../Model/User.js";
 
 export interface LoginResult {
   token: string;

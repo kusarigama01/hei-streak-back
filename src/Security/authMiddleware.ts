@@ -1,6 +1,6 @@
 import type { NextFunction, Request, Response } from "express";
-import type { UserRole } from "../Model/User";
-import { verifyToken } from "./jwt";
+import type { UserRole } from "../Model/User.js";
+import { verifyToken } from "./jwt.js";
 
 declare global {
   namespace Express {
