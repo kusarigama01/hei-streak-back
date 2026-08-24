@@ -4,7 +4,6 @@ import cors from "cors";
 import * as dotenv from "dotenv";
 import { pool } from "./config/db.js";
 import { postLogin } from "./Controller/AuthController.js";
-import { authenticate, requireRole } from "./Security/authMiddleware.js";
 import { ApiError } from "./Service/ApiError.js";
 
 dotenv.config();
@@ -20,10 +19,6 @@ app.get("/api/health", async (_req, res) => {
 });
 
 app.post("/api/auth/login", postLogin);
-
-app.get("/api/_auth-test", authenticate, requireRole("admin"), (_req, res) => {
-  res.json({ message: "Admin access granted" });
-});
 
 app.use((error: unknown, _req: Request, res: Response, _next: NextFunction): void => {
   if (error instanceof ApiError) {
