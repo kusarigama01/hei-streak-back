@@ -1,20 +1,19 @@
 {
-  "name": "exam-hub-backend",
+  "name": "hei-streak-back",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-"scripts": {
-  "dev": "tsx watch src/index.ts",
-  "seed": "tsx db/seed.ts",
-  "build": "tsc",
-  "start": "node dist/index.js"
-},
+  "type": "module",
+  "main": "dist/index.js",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "seed": "tsx db/seed.ts"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/kusarigama01/hei-streak-back.git"
   },
   "keywords": [],
-  "type": "commonjs",
   "bugs": {
     "url": "https://github.com/kusarigama01/hei-streak-back/issues"
   },
@@ -34,8 +33,6 @@
     "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^26.2.0",
     "@types/pg": "^8.23.1",
-    "ts-node": "^10.9.2",
-    "ts-node-dev": "^2.0.0",
     "tsx": "^4.23.12",
     "typescript": "^7.0.2"
   }
