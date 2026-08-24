@@ -1,10 +1,5 @@
-import { Pool } from "pg";
 import bcrypt from "bcrypt";
-import * as dotenv from "dotenv";
-
-dotenv.config();
-
-const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+import { pool } from "../src/config/db.js";
 
 // TODO: replace this local hashing call with the shared hashPassword()
 // function from src/Security/password.ts once it lands, to avoid
