@@ -1,16 +1,12 @@
-import bcrypt from "bcrypt";
+import { hashPassword } from "../src/Security/password.js";
 import { pool } from "../src/config/db.js";
 
-// TODO: replace this local hashing call with the shared hashPassword()
-// function from src/Security/password.ts once it lands, to avoid
-// having two different bcrypt implementations in the project.
 async function seed() {
   const email = "admin@examhub.local";
   const plainPassword = "Admin123!";
-  const passwordHash = await bcrypt.hash(plainPassword, 10);
+  const passwordHash = await hashPassword(plainPassword);
 
   const existing = await pool.query("SELECT id FROM users WHERE email = $1", [email]);
-
   if (existing.rows.length > 0) {
     console.log("Admin account already exists, nothing to do.");
     await pool.end();
