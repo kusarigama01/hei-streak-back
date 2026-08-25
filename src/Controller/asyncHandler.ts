@@ -17,3 +17,11 @@ export const asyncHandler = (handler: Handler) => {
     }
   };
 };
+
+export const getIdParam = (req: Request): string => {
+  const { id } = req.params;
+  if (typeof id !== "string") {
+    throw new AppError(400, "Invalid id parameter");
+  }
+  return id;
+};

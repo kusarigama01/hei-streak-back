@@ -7,11 +7,13 @@ interface PgError extends Error {
   code?: string;
 }
 
-function validateWindow(startAt: string, endAt: string): void {
+const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+const validateWindow = (startAt: string, endAt: string): void => {
   if (new Date(endAt) <= new Date(startAt)) {
     throw new AppError(400, "endAt must be after startAt");
   }
-}
+};
 
 export const ExamService = {
   async list(): Promise<Exam[]> {
@@ -33,6 +35,9 @@ export const ExamService = {
     startAt: string,
     endAt: string
   ): Promise<Exam> {
+    if (!UUID_REGEX.test(courseId)) {
+      throw new AppError(400, "Invalid courseId format");
+    }
     const course = await CourseRepository.findById(courseId);
     if (!course) {
       throw new AppError(404, "Course not found");
@@ -62,7 +67,6 @@ export const ExamService = {
     return updated;
   },
 
-  // RG-09: cannot delete an exam with recorded attempts
   async remove(id: string): Promise<void> {
     const current = await ExamRepository.findById(id);
     if (!current) {
