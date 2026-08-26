@@ -10,6 +10,10 @@ import { getMyExams, getMyExamDetail } from "./Controller/StudentExamController.
 import { postSubmit } from "./Controller/SubmitController.js";
 import { getMyResults } from "./Controller/StudentResultsController.js";
 import { ApiError } from "./Service/ApiError.js";
+import studentsRouter from "./routes/students.js";
+import coursesRouter from "./routes/courses.js";
+import examsRouter from "./routes/exams.js";
+
 
 dotenv.config();
 
@@ -22,6 +26,7 @@ app.get("/api/health", async (_req, res) => {
   const result = await pool.query("SELECT NOW()");
   res.json({ status: "ok", db_time: result.rows[0].now });
 });
+
 
 app.post("/api/auth/login", postLogin);
 
@@ -49,3 +54,7 @@ const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
+
+app.use("/api/students", studentsRouter);
+app.use("/api/courses", coursesRouter);
+app.use("/api/exams", examsRouter);
