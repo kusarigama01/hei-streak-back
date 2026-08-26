@@ -1,5 +1,5 @@
 import type { NextFunction, Request, Response } from "express";
-import { getAvailableExams, getStudentExam } from "../Service/ExamService.js";
+import { getAvailableExams, getStudentExam } from "../Service/StudentExamService.js";
 
 export const getMyExams = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {

@@ -2,7 +2,7 @@ import { findExamById, findAvailableExams } from "../Repositorie/ExamRepository.
 import { findQuestionsByExamId } from "../Repositorie/QuestionRepository.js";
 import { findAttemptByStudentExam } from "../Repositorie/AttemptRepository.js";
 import { ApiError } from "./ApiError.js";
-import type { ExamListItem, StudentExamDTO } from "../Model/Exam.js";
+import type { ExamListItem, StudentExamDTO } from "../Model/StudentExam.js";
 
 export const getAvailableExams = async (studentId: string): Promise<ExamListItem[]> => {
   return findAvailableExams(studentId);

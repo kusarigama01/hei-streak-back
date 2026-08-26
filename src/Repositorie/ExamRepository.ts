@@ -1,5 +1,6 @@
 import { pool } from "../config/db.js";
-import type { Exam, ExamListItem } from "../Model/Exam.js";
+import type { Exam } from "../Model/Exam.js";
+import type { ExamListItem } from "../Model/StudentExam.js";
 
 export const findExamById = async (id: string): Promise<Exam | null> => {
   const result = await pool.query(

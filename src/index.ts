@@ -6,9 +6,9 @@ import { pool } from "./config/db.js";
 import { postLogin } from "./Controller/AuthController.js";
 import { authenticate, requireRole } from "./Security/authMiddleware.js";
 import { postQuestion, putQuestion, deleteQuestionHandler } from "./Controller/QuestionController.js";
-import { getMyExams, getMyExamDetail } from "./Controller/ExamController.js";
+import { getMyExams, getMyExamDetail } from "./Controller/StudentExamController.js";
 import { postSubmit } from "./Controller/SubmitController.js";
-import { getMyResults } from "./Controller/ResultsController.js";
+import { getMyResults } from "./Controller/StudentResultsController.js";
 import { ApiError } from "./Service/ApiError.js";
 
 dotenv.config();
