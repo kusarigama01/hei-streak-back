@@ -1,81 +1,52 @@
 import { pool } from "../config/db.js";
 import type { Exam } from "../Model/Exam.js";
+import type { ExamListItem } from "../Model/StudentExam.js";
 
-interface ExamRow {
-  id: string;
-  course_id: string;
-  title: string;
-  description: string | null;
-  start_at: Date;
-  end_at: Date;
-  created_at: Date;
-}
+export const findExamById = async (id: string): Promise<Exam | null> => {
+  const result = await pool.query(
+    `SELECT e.id, e.course_id, e.title, e.description, e.start_at, e.end_at, e.created_at,
+            c.name AS "courseName", c.code AS "courseCode"
+     FROM exams e
+     JOIN courses c ON c.id = e.course_id
+     WHERE e.id = $1`,
+    [id],
+  );
+  const row = result.rows[0];
+  if (!row) return null;
+  return {
+    id: row.id,
+    courseId: row.course_id,
+    title: row.title,
+    description: row.description,
+    startAt: row.start_at,
+    endAt: row.end_at,
+    createdAt: row.created_at,
+    courseName: row.courseName,
+    courseCode: row.courseCode,
+  };
+};
 
-const toExam = (row: ExamRow): Exam => ({
-  id: row.id,
-  courseId: row.course_id,
-  title: row.title,
-  description: row.description,
-  startAt: row.start_at,
-  endAt: row.end_at,
-  createdAt: row.created_at,
-});
-
-export const ExamRepository = {
-  async findAll(): Promise<Exam[]> {
-    const result = await pool.query<ExamRow>(
-      `SELECT id, course_id, title, description, start_at, end_at, created_at
-       FROM exams ORDER BY start_at DESC`
-    );
-    return result.rows.map(toExam);
-  },
-
-  async findById(id: string): Promise<Exam | null> {
-    const result = await pool.query<ExamRow>(
-      `SELECT id, course_id, title, description, start_at, end_at, created_at
-       FROM exams WHERE id = $1`,
-      [id]
-    );
-    return result.rows[0] ? toExam(result.rows[0]) : null;
-  },
-
-  async create(
-    courseId: string,
-    title: string,
-    description: string | null,
-    startAt: string,
-    endAt: string
-  ): Promise<Exam> {
-    const result = await pool.query<ExamRow>(
-      `INSERT INTO exams (course_id, title, description, start_at, end_at)
-       VALUES ($1, $2, $3, $4, $5)
-       RETURNING id, course_id, title, description, start_at, end_at, created_at`,
-      [courseId, title, description, startAt, endAt]
-    );
-    return toExam(result.rows[0]);
-  },
-
-  async update(
-    id: string,
-    title?: string,
-    description?: string,
-    startAt?: string,
-    endAt?: string
-  ): Promise<Exam | null> {
-    const result = await pool.query<ExamRow>(
-      `UPDATE exams
-       SET title = COALESCE($2, title),
-           description = COALESCE($3, description),
-           start_at = COALESCE($4, start_at),
-           end_at = COALESCE($5, end_at)
-       WHERE id = $1
-       RETURNING id, course_id, title, description, start_at, end_at, created_at`,
-      [id, title ?? null, description ?? null, startAt ?? null, endAt ?? null]
-    );
-    return result.rows[0] ? toExam(result.rows[0]) : null;
-  },
-
-  async delete(id: string): Promise<void> {
-    await pool.query(`DELETE FROM exams WHERE id = $1`, [id]);
-  },
+export const findAvailableExams = async (studentId: string): Promise<ExamListItem[]> => {
+  const result = await pool.query(
+    `SELECT e.id, e.title, e.description,
+            c.name AS "courseName", c.code AS "courseCode",
+            e.start_at AS "startAt", e.end_at AS "endAt"
+     FROM exams e
+     JOIN courses c ON c.id = e.course_id
+     WHERE now() BETWEEN e.start_at AND e.end_at
+       AND NOT EXISTS (
+         SELECT 1 FROM attempts a WHERE a.exam_id = e.id AND a.student_id = $1
+       )
+     ORDER BY e.start_at`,
+    [studentId],
+  );
+  return result.rows.map((row) => ({
+    id: row.id,
+    title: row.title,
+    description: row.description,
+    courseName: row.courseName,
+    courseCode: row.courseCode,
+    startAt: row.startAt,
+    endAt: row.endAt,
+  }));
 };
