@@ -33,8 +33,8 @@ export const getStudentExam = async (
     id: exam.id,
     title: exam.title,
     description: exam.description,
-    courseName: "",
-    courseCode: "",
+    courseName: exam.courseName,
+    courseCode: exam.courseCode,
     startAt: exam.startAt,
     endAt: exam.endAt,
     questions: questions.map((q) => ({

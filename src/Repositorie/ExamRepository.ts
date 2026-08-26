@@ -3,7 +3,11 @@ import type { Exam, ExamListItem } from "../Model/Exam.js";
 
 export const findExamById = async (id: string): Promise<Exam | null> => {
   const result = await pool.query(
-    "SELECT id, course_id, title, description, start_at, end_at, created_at FROM exams WHERE id = $1",
+    `SELECT e.id, e.course_id, e.title, e.description, e.start_at, e.end_at, e.created_at,
+            c.name AS "courseName", c.code AS "courseCode"
+     FROM exams e
+     JOIN courses c ON c.id = e.course_id
+     WHERE e.id = $1`,
     [id],
   );
   const row = result.rows[0];
@@ -16,6 +20,8 @@ export const findExamById = async (id: string): Promise<Exam | null> => {
     startAt: row.start_at,
     endAt: row.end_at,
     createdAt: row.created_at,
+    courseName: row.courseName,
+    courseCode: row.courseCode,
   };
 };
 

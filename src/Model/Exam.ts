@@ -6,6 +6,8 @@ export interface Exam {
   startAt: Date;
   endAt: Date;
   createdAt: Date;
+  courseName: string;
+  courseCode: string;
 }
 
 export interface ExamListItem {
