@@ -8,7 +8,7 @@ export interface Attempt {
 
 export interface AttemptWithDetails extends Attempt {
   examTitle: string;
-  courseName: string | null;
-  courseCode: string | null;
+  courseName: string;
+  courseCode: string;
   totalPoints: number;
 }

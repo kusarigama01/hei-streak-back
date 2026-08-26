@@ -7,6 +7,7 @@ import {
   countAttemptsByExam,
 } from "../Repositorie/QuestionRepository.js";
 import { replaceChoices } from "../Repositorie/ChoiceRepository.js";
+import { findExamById } from "../Repositorie/ExamRepository.js";
 import type { QuestionWithChoices } from "../Model/Question.js";
 
 const validateChoices = (choices: { text: string; isCorrect: boolean }[]): void => {
@@ -32,6 +33,11 @@ export const createQuestionWithChoices = async (
     throw new ApiError(400, "Points must be greater than 0");
   }
   validateChoices(choices);
+
+  const exam = await findExamById(examId);
+  if (!exam) {
+    throw new ApiError(404, "Exam not found");
+  }
 
   const question = await createQuestion(examId, statement.trim(), points);
   const savedChoices = await replaceChoices(question.id, choices);
