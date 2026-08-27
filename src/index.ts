@@ -41,6 +41,10 @@ app.get("/api/my/exams/:id", authenticate, requireRole("student"), getMyExamDeta
 app.post("/api/my/exams/:id/submit", authenticate, requireRole("student"), postSubmit);
 app.get("/api/my/results", authenticate, requireRole("student"), getMyResults);
 
+app.use((_req, res) => {
+res.status(404).json({ message: "Route not found" });
+});
+
 app.use((error: unknown, _req: Request, res: Response, _next: NextFunction): void => {
   if (error instanceof ApiError) {
     res.status(error.status).json({ message: error.message });
