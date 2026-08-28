@@ -2,8 +2,8 @@ import { pool } from "../config/db.js";
 import type { Choice } from "../Model/Question.js";
 
 export const replaceChoices = async (
-  questionId: string,
-  choices: { text: string; isCorrect: boolean }[],
+  questionId: number,
+  choices: { text: string; is_correct: boolean }[],
 ): Promise<Choice[]> => {
   const client = await pool.connect();
   try {
@@ -14,14 +14,14 @@ export const replaceChoices = async (
     for (const choice of choices) {
       const result = await client.query(
         "INSERT INTO choices (question_id, text, is_correct) VALUES ($1, $2, $3) RETURNING id, question_id, text, is_correct",
-        [questionId, choice.text, choice.isCorrect],
+        [questionId, choice.text, choice.is_correct],
       );
       const row = result.rows[0];
       inserted.push({
         id: row.id,
-        questionId: row.question_id,
+        question_id: row.question_id,
         text: row.text,
-        isCorrect: row.is_correct,
+        is_correct: row.is_correct,
       });
     }
 

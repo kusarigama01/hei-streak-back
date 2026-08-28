@@ -2,7 +2,7 @@ import { pool } from "../config/db.js";
 import type { Student } from "../Model/Student.js";
 
 interface StudentRow {
-  id: string;
+  id: number;
   email: string;
   password_hash: string;
   name: string;
@@ -15,8 +15,8 @@ function toStudent(row: StudentRow): Student {
     id: row.id,
     email: row.email,
     name: row.name,
-    isActive: row.is_active,
-    createdAt: row.created_at,
+    is_active: row.is_active,
+    created_at: row.created_at,
   };
 }
 
@@ -29,7 +29,7 @@ export const StudentRepository = {
     return result.rows.map(toStudent);
   },
 
-  async findById(id: string): Promise<Student | null> {
+  async findById(id: number): Promise<Student | null> {
     const result = await pool.query<StudentRow>(
       `SELECT id, email, password_hash, name, is_active, created_at
        FROM users WHERE id = $1 AND role = 'student'`,
@@ -58,7 +58,7 @@ export const StudentRepository = {
   },
 
   async update(
-    id: string,
+    id: number,
     email?: string,
     name?: string,
     passwordHash?: string
@@ -75,7 +75,7 @@ export const StudentRepository = {
     return result.rows[0] ? toStudent(result.rows[0]) : null;
   },
 
-  async deactivate(id: string): Promise<Student | null> {
+  async deactivate(id: number): Promise<Student | null> {
     const result = await pool.query<StudentRow>(
       `UPDATE users SET is_active = FALSE
        WHERE id = $1 AND role = 'student'
