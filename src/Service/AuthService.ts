@@ -5,24 +5,19 @@ import { ApiError } from "./ApiError.js";
 import type { User } from "../Model/User.js";
 
 export interface LoginResult {
-  token: string;
-  user: {
-    id: string;
-    name: string;
-    email: string;
-    role: User["role"];
-  };
+    token: string;
+    user: { id: number; name: string; email: string; role: User["role"] };
 }
 
 export const login = async (email: string, password: string): Promise<LoginResult> => {
   const user = await findUserByEmail(email.trim().toLowerCase());
 
-  if (!user || !(await comparePassword(password, user.passwordHash))) {
+  if (!user || !(await comparePassword(password, user.password_hash))) {
     throw new ApiError(401, "Invalid email or password");
   }
 
-  if (!user.isActive) {
-    throw new ApiError(403, "Account is deactivated");
+  if (!user.is_active) {
+    throw new ApiError(403, "Account disabled");
   }
 
   return {

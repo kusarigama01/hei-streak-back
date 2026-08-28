@@ -13,24 +13,24 @@ export const getExam = asyncHandler(async (req: Request, res: Response) => {
 });
 
 export const createExam = asyncHandler(async (req: Request, res: Response) => {
-  const { courseId, title, description, startAt, endAt } = req.body;
-  if (!courseId || !title || !startAt || !endAt) {
+  const { course_id, title, description, starts_at, ends_at } = req.body;
+  if (!course_id || !title || !starts_at || !ends_at) {
     res
       .status(400)
-      .json({ message: "courseId, title, startAt and endAt are required" });
+      .json({ message: "course_id, title, starts_at and ends_at are required" });
     return;
   }
-  const exam = await ExamService.create(courseId, title, description, startAt, endAt);
+  const exam = await ExamService.create(course_id, title, description, starts_at, ends_at);
   res.status(201).json(exam);
 });
 
 export const updateExam = asyncHandler(async (req: Request, res: Response) => {
-  const { title, description, startAt, endAt } = req.body;
-  const exam = await ExamService.update(getIdParam(req), title, description, startAt, endAt);
+  const { title, description, starts_at, ends_at } = req.body;
+  const exam = await ExamService.update(getIdParam(req), title, description, starts_at, ends_at);
   res.status(200).json(exam);
 });
 
 export const deleteExam = asyncHandler(async (req: Request, res: Response) => {
   await ExamService.remove(getIdParam(req));
-  res.status(204).send();
+  res.status(200).json({ message: "Exam deleted" });
 });

@@ -5,7 +5,7 @@ import { verifyToken } from "./jwt.js";
 declare global {
   namespace Express {
     interface Request {
-      user?: { sub: string; role: UserRole };
+      user?: { sub: number; role: UserRole };
     }
   }
 }

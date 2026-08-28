@@ -2,7 +2,7 @@ import jwt from "jsonwebtoken";
 import type { UserRole } from "../Model/User.js";
 
 export interface TokenPayload {
-  sub: string;
+  sub: number;
   role: UserRole;
 }
 
@@ -12,4 +12,4 @@ export const generateToken = (payload: TokenPayload): string =>
   });
 
 export const verifyToken = (token: string): TokenPayload =>
-  jwt.verify(token, process.env.JWT_SECRET as string) as TokenPayload;
+  jwt.verify(token, process.env.JWT_SECRET as string) as unknown as TokenPayload;

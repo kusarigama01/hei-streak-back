@@ -1,11 +1,13 @@
+export interface ExamCourse { id: number; code: string; name: string; }
+
 export interface Exam {
-  id: string;
-  courseId: string;
-  title: string;
-  description: string | null;
-  startAt: Date;
-  endAt: Date;
-  createdAt: Date;
-  courseName: string;
-  courseCode: string;
+    id: number;
+    course: ExamCourse;
+    title: string;
+    description: string | null;
+    starts_at: Date;
+    ends_at: Date;
+    created_at: Date;
+    question_count: number;
+    attempt_count: number;
 }

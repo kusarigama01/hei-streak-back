@@ -2,8 +2,8 @@ import { pool } from "../config/db.js";
 import type { Attempt, AttemptWithDetails } from "../Model/Attempt.js";
 
 export const findAttemptByStudentExam = async (
-  studentId: string,
-  examId: string,
+  studentId: number,
+  examId: number,
 ): Promise<Attempt | null> => {
   const result = await pool.query(
     "SELECT id, exam_id, student_id, submitted_at, score FROM attempts WHERE student_id = $1 AND exam_id = $2",
@@ -13,16 +13,16 @@ export const findAttemptByStudentExam = async (
   if (!row) return null;
   return {
     id: row.id,
-    examId: row.exam_id,
-    studentId: row.student_id,
-    submittedAt: row.submitted_at,
+    exam_id: row.exam_id,
+    student_id: row.student_id,
+    submitted_at: row.submitted_at,
     score: row.score,
   };
 };
 
 export const createAttempt = async (
-  studentId: string,
-  examId: string,
+  studentId: number,
+  examId: number,
   score: number,
   client: any,
 ): Promise<Attempt> => {
@@ -33,39 +33,36 @@ export const createAttempt = async (
   const row = result.rows[0];
   return {
     id: row.id,
-    examId: row.exam_id,
-    studentId: row.student_id,
-    submittedAt: row.submitted_at,
+    exam_id: row.exam_id,
+    student_id: row.student_id,
+    submitted_at: row.submitted_at,
     score: row.score,
   };
 };
 
 export const findAttemptsByStudent = async (
-  studentId: string,
+  studentId: number,
 ): Promise<AttemptWithDetails[]> => {
   const result = await pool.query(
-    `SELECT a.id, a.exam_id AS "examId", a.student_id AS "studentId",
-            a.submitted_at AS "submittedAt", a.score,
-            e.title AS "examTitle", c.name AS "courseName", c.code AS "courseCode",
-            COALESCE(SUM(q.points), 0) AS "totalPoints"
+    `SELECT a.id, a.exam_id, a.student_id, a.submitted_at, a.score,
+            e.title, c.code AS course_code,
+            COALESCE(SUM(q.points), 0)::int AS total_points
      FROM attempts a
      JOIN exams e ON e.id = a.exam_id
      JOIN courses c ON c.id = e.course_id
      LEFT JOIN questions q ON q.exam_id = a.exam_id
      WHERE a.student_id = $1
-     GROUP BY a.id, e.title, c.name, c.code
+     GROUP BY a.id, a.exam_id, a.student_id, a.submitted_at, a.score, e.title, c.code
      ORDER BY a.submitted_at DESC`,
     [studentId],
   );
   return result.rows.map((row) => ({
     id: row.id,
-    examId: row.examId,
-    studentId: row.studentId,
-    submittedAt: row.submittedAt,
+    exam_id: row.exam_id,
+    title: row.title,
+    course_code: row.course_code,
     score: row.score,
-    examTitle: row.examTitle,
-    courseName: row.courseName,
-    courseCode: row.courseCode,
-    totalPoints: row.totalPoints,
+    total_points: row.total_points,
+    submitted_at: row.submitted_at,
   }));
 };

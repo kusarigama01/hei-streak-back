@@ -1,29 +1,23 @@
 import { pool } from "../config/db.js";
 
 export interface ExamResultRow {
-  student_id: string;
-  student_name: string;
-  student_email: string;
-  score: number;
-  submitted_at: Date;
+    student_id: number; name: string; score: number; submitted_at: Date;
 }
 
 export const ResultsRepository = {
-  async getResultsForExam(examId: string): Promise<ExamResultRow[]> {
+  async getResultsForExam(examId: number): Promise<ExamResultRow[]> {
     const result = await pool.query<ExamResultRow>(
-      `SELECT u.id AS student_id, u.name AS student_name, u.email AS student_email,
-              a.score, a.submitted_at
-       FROM attempts a
-       JOIN users u ON u.id = a.student_id
+      `SELECT u.id AS student_id, u.name AS name, a.score, a.submitted_at
+       FROM attempts a JOIN users u ON u.id = a.student_id
        WHERE a.exam_id = $1
-       ORDER BY a.submitted_at ASC`,
+       ORDER BY a.score DESC, u.name ASC`,
       [examId]
     );
     return result.rows;
   },
 
   async getStatsForExam(
-    examId: string
+    examId: number
   ): Promise<{ attemptCount: number; averageScore: number }> {
     const result = await pool.query<{
       attempt_count: string;

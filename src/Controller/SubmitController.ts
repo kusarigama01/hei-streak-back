@@ -4,7 +4,7 @@ import { ApiError } from "../Service/ApiError.js";
 
 export const postSubmit = async (req: Request<{ id: string }>, res: Response, next: NextFunction): Promise<void> => {
   try {
-    const { id: examId } = req.params;
+    const examId = Number(req.params.id);
     const { answers } = req.body;
 
     if (!Array.isArray(answers)) {
@@ -12,7 +12,7 @@ export const postSubmit = async (req: Request<{ id: string }>, res: Response, ne
     }
 
     const result = await submitExam(examId, req.user!.sub, answers);
-    res.status(200).json(result);
+    res.status(201).json(result);
   } catch (error) {
     next(error);
   }

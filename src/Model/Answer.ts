@@ -1,6 +1,6 @@
 export interface Answer {
-  id: string;
-  attemptId: string;
-  questionId: string;
-  choiceId: string | null;
+    id: number;
+    attempt_id: number;
+    question_id: number;
+    choice_id: number | null;
 }
