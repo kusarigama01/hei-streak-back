@@ -1,18 +1,19 @@
-export interface Question {
-  id: string;
-  examId: string;
-  statement: string;
-  points: number;
-  createdAt: Date;
+export interface Choice {
+    id: number;
+    question_id: number;
+    text: string;
+    is_correct: boolean;
 }
 
-export interface Choice {
-  id: string;
-  questionId: string;
-  text: string;
-  isCorrect: boolean;
+export interface Question {
+    id: number;
+    exam_id: number;
+    statement: string;
+    points: number;
+    position: number;
+    created_at: Date;
 }
 
 export interface QuestionWithChoices extends Question {
-  choices: Choice[];
+    choices: Choice[];
 }

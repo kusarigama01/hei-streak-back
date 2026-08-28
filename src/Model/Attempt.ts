@@ -1,14 +1,17 @@
 export interface Attempt {
-  id: string;
-  examId: string;
-  studentId: string;
-  submittedAt: Date;
-  score: number;
+    id: number;
+    exam_id: number;
+    student_id: number;
+    submitted_at: Date;
+    score: number;
 }
 
-export interface AttemptWithDetails extends Attempt {
-  examTitle: string;
-  courseName: string;
-  courseCode: string;
-  totalPoints: number;
+export interface AttemptWithDetails {
+    id: number;
+    exam_id: number;
+    title: string;
+    course_code: string;
+    score: number;
+    total_points: number;
+    submitted_at: Date;
 }

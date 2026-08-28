@@ -1,7 +1,8 @@
 export interface Course {
-  id: string;
-  code: string;
-  name: string;
-  description: string | null;
-  createdAt: Date;
+    id: number;
+    code: string;
+    name: string;
+    description: string | null;
+    created_at: Date;
+    exam_count: number;
 }
