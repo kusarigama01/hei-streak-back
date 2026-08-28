@@ -5,7 +5,6 @@ import * as dotenv from "dotenv";
 import { pool } from "./config/db.js";
 import { postLogin } from "./Controller/AuthController.js";
 import { authenticate, requireRole } from "./Security/authMiddleware.js";
-import { postQuestion, putQuestion, deleteQuestionHandler } from "./Controller/QuestionController.js";
 import { getMyExams, getMyExamDetail } from "./Controller/StudentExamController.js";
 import { postSubmit } from "./Controller/SubmitController.js";
 import { getMyResults } from "./Controller/StudentResultsController.js";
@@ -13,6 +12,7 @@ import { ApiError } from "./Service/ApiError.js";
 import studentsRouter from "./routes/students.js";
 import coursesRouter from "./routes/courses.js";
 import examsRouter from "./routes/exams.js";
+import questionsRouter from "./routes/questions.js";
 
 
 dotenv.config();
@@ -31,9 +31,10 @@ app.get("/api/health", async (_req, res) => {
 app.post("/api/auth/login", postLogin);
 
 // --- Admin routes ---
-app.post("/api/exams/:id/questions", authenticate, requireRole("admin"), postQuestion);
-app.put("/api/exams/:id/questions/:questionId", authenticate, requireRole("admin"), putQuestion);
-app.delete("/api/exams/:id/questions/:questionId", authenticate, requireRole("admin"), deleteQuestionHandler);
+app.use("/api/students", studentsRouter);
+app.use("/api/courses", coursesRouter);
+app.use("/api/exams", examsRouter);
+app.use("/api/questions", questionsRouter);
 
 // --- Student routes ---
 app.get("/api/my/exams", authenticate, requireRole("student"), getMyExams);
@@ -41,8 +42,9 @@ app.get("/api/my/exams/:id", authenticate, requireRole("student"), getMyExamDeta
 app.post("/api/my/exams/:id/submit", authenticate, requireRole("student"), postSubmit);
 app.get("/api/my/results", authenticate, requireRole("student"), getMyResults);
 
-app.use((_req, res) => {
-res.status(404).json({ message: "Route not found" });
+// 404
+app.use((_req: Request, res: Response) => {
+  res.status(404).json({ message: "Route not found" });
 });
 
 app.use((error: unknown, _req: Request, res: Response, _next: NextFunction): void => {
@@ -58,7 +60,3 @@ const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
-
-app.use("/api/students", studentsRouter);
-app.use("/api/courses", coursesRouter);
-app.use("/api/exams", examsRouter);

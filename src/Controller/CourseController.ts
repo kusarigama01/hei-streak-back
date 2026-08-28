@@ -25,5 +25,5 @@ export const updateCourse = asyncHandler(async (req: Request, res: Response) => 
 
 export const deleteCourse = asyncHandler(async (req: Request, res: Response) => {
   await CourseService.remove(getIdParam(req));
-  res.status(204).send();
+  res.status(200).json({ message: "Course deleted" });
 });

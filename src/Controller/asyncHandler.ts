@@ -1,5 +1,5 @@
 import type { NextFunction, Request, Response } from "express";
-import { AppError } from "../Model/AppError.js";
+import { ApiError } from "../Service/ApiError.js";
 
 type Handler = (req: Request, res: Response) => Promise<void>;
 
@@ -8,8 +8,8 @@ export const asyncHandler = (handler: Handler) => {
     try {
       await handler(req, res);
     } catch (err) {
-      if (err instanceof AppError) {
-        res.status(err.statusCode).json({ message: err.message });
+      if (err instanceof ApiError) {
+        res.status(err.status).json({ message: err.message });
         return;
       }
       console.error(err);
@@ -18,10 +18,9 @@ export const asyncHandler = (handler: Handler) => {
   };
 };
 
-export const getIdParam = (req: Request): string => {
-  const { id } = req.params;
-  if (typeof id !== "string") {
-    throw new AppError(400, "Invalid id parameter");
-  }
-  return id;
+export const getIdParam = (req: Request): number => {
+    const n = Number(req.params.id);
+    if (!Number.isInteger(n) || n <= 0)
+        throw new ApiError(400, "Invalid id parameter");
+    return n;
 };

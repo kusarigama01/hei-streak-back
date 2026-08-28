@@ -2,7 +2,7 @@ import jwt from "jsonwebtoken";
 import type { UserRole } from "../Model/User.js";
 
 export interface TokenPayload {
-  sub: string;
+  sub: number;
   role: UserRole;
 }
 
